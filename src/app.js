@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const productoRutas = require("./rutas/productoRutas");
-const categoriaRutas = require("./rutas/categoriaRutas")
+const categoriaRutas = require("./rutas/categoriaRutas");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 // Rutas de usuario
 app.use("/producto", productoRutas);
-app.use("/categoria", categoriaRutas)
+app.use("/categoria", categoriaRutas);
 
 // Middleware de manejo de errores
 app.use(errorHandler);
