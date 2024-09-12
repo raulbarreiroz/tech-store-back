@@ -6,8 +6,8 @@
 -- Requerimientos
 
 /*
-productos		: almacenar informaciÛn inherente a los productos del inventario
-categorias		: informaciÛn por la cual se clasifican los productos
+productos		: almacenar informaci√≥n inherente a los productos del inventario
+categorias		: informaci√≥n por la cual se clasifican los productos
 modificacion	: guarda un registro de las modificaciones que se hicieron a productos 
 				  con sus respectivas categorias
 */
@@ -17,10 +17,10 @@ modificacion	: guarda un registro de las modificaciones que se hicieron a produc
 Entidades claves:
 producto			:	representa el producto
 categoria			:	representa la categoria
-productoXcategoria	:	represneta la relaciÛn entre el producto y la categorÌa
-						(relaciÛn muchos a muchos)
+productoXcategoria	:	represneta la relaci√≥n entre el producto y la categor√≠a
+						(relaci√≥n muchos a muchos)
 
---  Paso 1: Diagrama Entidad-RelaciÛn (ER)
+--  Paso 1: Diagrama Entidad-Relaci√≥n (ER)
 - producto:
 id_producto			(PK, int)
 nombre				(varchar)
@@ -41,22 +41,22 @@ id_categoria			(FK, int)
 fecha_creacion		(datetime)
 estado				(datetime)
 
--- el estado podrÌa ser otra tabla (cat·logo)
+-- el estado podr√≠a ser otra tabla (cat√°logo)
 
 - modificacion:
 id_modificacion		(PK, int)
 id_producto			(FK, int)
 id_categoria		(FK, int)
 fecha_creacion		(datetime)
-accion				(varchar) -- esta accion podrÌa ser otra catalogo, para estandarizar, pero por tiempo se lo manejar· como un campo
+accion				(varchar) -- esta accion podr√≠a ser otra catalogo, para estandarizar, pero por tiempo se lo manejar√° como un campo
 
 - Relaciones:
-Un producto puede tener una o varias categorias (relaciÛn muchos a muchos)
+Un producto puede tener una o varias categorias (relaci√≥n muchos a muchos)
 
 */
 
--- Paso 2: ImplementaciÛn de la Base de Datos
--- CreaciÛn de Talas 
+-- Paso 2: Implementaci√≥n de la Base de Datos
+-- Creaci√≥n de Talas 
 -- Tabla producto
 DROP TABLE IF EXISTS producto;
 CREATE TABLE producto (
@@ -87,11 +87,11 @@ CREATE TABLE productoXcategoria (
 	--FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 )
 
--- Õndices: se recomienda en columnas con una alta tasa de consulta para mejorar rendimiento
+-- √çndices: se recomienda en columnas con una alta tasa de consulta para mejorar rendimiento
 CREATE INDEX idx_producto_fecha_creacion	ON producto(fecha_creacion)
 CREATE INDEX idx_categoria_fecha_creacion	ON categoria(fecha_creacion)
 
--- Paso 3: OptimizaciÛn 
+-- Paso 3: Optimizaci√≥n 
 
 -- SPs: para evitar que las aplicaciones ejecuten consultas directa (seguridad y rendimiento)
 
@@ -197,9 +197,11 @@ BEGIN
 END
 
 -- CRUD de tabla producto
+/*
 EXEC sp_inserta_producto 'Iphone 15 pro max', 'celular gama alta'
 EXEC sp_modifica_producto 4, 'Iphone 15 PRO MAX'
 EXEC sp_dar_baja_producto 4
+*/
 
 -- tabla categoria
 -- EXEC sp_inserta_producto 'TOSHIBA T300', 'Laptop de gama media'
@@ -222,8 +224,6 @@ BEGIN
 		WHERE	id_categoria = @id_categoria
 	END	
 END
-
-select * from categoria
 
 CREATE PROCEDURE sp_inserta_categoria
 	@nombre			VARCHAR(50),
@@ -302,11 +302,179 @@ BEGIN
 END
 
 -- CRUD de tabla producto
+/*
 EXEC sp_inserta_categoria 'Celular', 'dedicada a terminales moviles'
 EXEC sp_inserta_categoria 'Laptop', 'dedicada a terminales moviles'
 EXEC sp_inserta_categoria 'Computador de escritorio', 'dedicada a terminales moviles'
 EXEC sp_modifica_categoria 2, 'Categoria pertenece a terminales moviles'
 EXEC sp_dar_baja_categoria 2
 select * from categoria;
+*/
 
+-- tabla: productoXcategoria
+--CREATE PROCEDURE sp_leer_productoXcategoria
+ALTER PROCEDURE sp_leer_productoXcategoria
+	@id_productoXcategoria	int		=	NULL
+AS
+BEGIN
+	IF @id_productoXcategoria IS NULL
+	BEGIN
+		SELECT	id_relacion, id_producto, id_categoria			
+		FROM	productoXcategoria
+	END
+	ELSE
+	BEGIN
+		SELECT	id_relacion, id_producto, id_categoria			
+		FROM	productoXcategoria
+		WHERE	id_relacion = @id_productoXcategoria
+	END	
+END
 
+--CREATE PROCEDURE sp_inserta_productoXcategoria
+ALTER PROCEDURE sp_inserta_productoXcategoria
+	@id_producto	int,
+	@id_categoria	int
+AS
+BEGIN
+	DROP TABLE IF EXISTS #tmp_producto;
+	SELECT	*
+	INTO	#tmp_producto
+	FROM	inventario.dbo.fn_valida_id_producto(@id_producto)
+
+	IF (SELECT COUNT(id_producto) FROM #tmp_producto) = 0
+	BEGIN 
+		SELECT 'ID_PRODUCTO INGRESADA NO EXISTE'
+	END
+
+	DROP TABLE IF EXISTS #tmp_categoria
+	SELECT	*
+	INTO	#tmp_categoria
+	FROM	inventario.dbo.fn_valida_id_categoria(@id_categoria)
+
+	IF (SELECT COUNT(id_categoria) FROM #tmp_categoria) = 0
+	BEGIN 
+		SELECT 'ID_CATEGORIA INGRESADA NO EXISTE'
+	END
+
+	IF 
+		(SELECT COUNT(id_producto) FROM #tmp_producto) > 0
+			AND
+		(SELECT estado FROM #tmp_producto) = 'ACTIVO'
+			AND
+		(SELECT COUNT(id_categoria) FROM #tmp_categoria) > 0
+			AND
+		(SELECT estado FROM #tmp_categoria) = 'ACTIVO'
+	BEGIN		
+		INSERT INTO productoXcategoria(id_producto, id_categoria)
+		VALUES (@id_producto, @id_categoria)
+	END		
+
+	DROP TABLE IF EXISTS #tmp_producto
+	DROP TABLE IF EXISTS #tmp_categoria
+
+	DECLARE @id_productoXcategoria int = (SELECT SCOPE_IDENTITY())
+
+	EXEC sp_leer_productoXcategoria @id_productoXcategoria
+END
+
+ALTER PROCEDURE sp_dar_baja_productoXcategoria
+	@id_productoXcategoria	int	
+AS
+BEGIN
+	DROP TABLE IF EXISTS #tmp_productoXcategoria;
+	SELECT	*
+	INTO	#tmp_productoXcategoria
+	FROM	productoXcategoria
+	WHERE	id_relacion = @id_productoXcategoria
+
+	IF (SELECT COUNT(id_categoria) FROM #tmp_productoXcategoria) = 0
+	BEGIN 
+		SELECT 'ID RELACION INGRESADA NO EXISTE'
+	END
+	ELSE
+	BEGIN	
+		DELETE FROM productoXcategoria WHERE id_relacion = @id_productoXcategoria		
+	END
+END
+
+CREATE PROCEDURE sp_dar_baja_relacion_de_producto
+	@id_producto	int	
+AS
+BEGIN
+	DROP TABLE IF EXISTS #tmp_productoXcategoria;
+	SELECT	*
+	INTO	#tmp_productoXcategoria
+	FROM	productoXcategoria
+	WHERE	id_producto = @id_producto
+
+	IF (SELECT COUNT(id_categoria) FROM #tmp_productoXcategoria) = 0
+	BEGIN 
+		SELECT 'ID PRODUCTO INGRESADA NO EXISTE'
+	END
+	ELSE
+	BEGIN	
+		DELETE FROM productoXcategoria WHERE id_producto = @id_producto
+	END
+END
+
+select * from producto
+select * from categoria
+select * from productoXcategoria where id_producto = 19
+-- 28, 29
+
+EXEC sp_inserta_categoria 'Celular', 'Dispositivos m√≥viles'
+EXEC sp_inserta_categoria 'Laptop', 'Dispositivos m√≥viles (computadoras)'
+EXEC sp_inserta_categoria 'Samsung', 'Fabricante de celular coreano'
+EXEC sp_inserta_categoria 'Iphone', 'Fabricante de celular americano'
+EXEC sp_modifica_categoria 7, NULL, 'ACTIVO', 'Ceular fabricado por Apple'
+EXEC sp_inserta_categoria 'Apple', 'Fabricante de tecnolog√≠a americano'
+EXEC sp_inserta_categoria 'Descuento', 'Producto con descuento'
+
+EXEC sp_inserta_producto 'HUAWEI P30'
+EXEC sp_inserta_producto 'Iphone 13 pro max'
+EXEC sp_inserta_producto 'Iphone 15 pro max'
+EXEC sp_inserta_producto 'MSI GAMER'
+EXEC sp_inserta_producto 'TOSHIBA P13'
+EXEC sp_inserta_producto 'Samsung S20'
+EXEC sp_inserta_producto 'Samsung S5'
+
+EXEC sp_inserta_productoXcategoria 8, 4
+EXEC sp_inserta_productoXcategoria 8, 7
+EXEC sp_inserta_productoXcategoria 8, 9
+EXEC sp_inserta_productoXcategoria 9, 4
+EXEC sp_inserta_productoXcategoria 9, 7
+EXEC sp_inserta_productoXcategoria 9, 9
+EXEC sp_inserta_productoXcategoria 9, 8
+EXEC sp_inserta_productoXcategoria 10, 5
+EXEC sp_inserta_productoXcategoria 11, 5
+EXEC sp_inserta_productoXcategoria 12, 6
+EXEC sp_inserta_productoXcategoria 12, 4
+EXEC sp_inserta_productoXcategoria 13, 6
+EXEC sp_inserta_productoXcategoria 13, 4
+
+--CREATE PROCEDURE sp_leer_productos_activos
+ALTER PROCEDURE sp_leer_productos_activos
+AS
+BEGIN
+	SELECT		p.id_producto,
+				p.nombre nombre_producto,
+				p.descripcion descripcion_producto,
+				p.fecha_creacion fecha_creacion_producto,
+				p.estado estado_producto,
+				(	
+					SELECT	pxc.id_relacion,
+							c.id_categoria,
+							c.nombre nombre_categoria,
+							c.descripcion descripcion_categoria,
+							c.fecha_creacion fecha_creacion_categoria,
+							c.estado estado_categoria
+					FROM	productoXcategoria pxc
+					JOIN	(SELECT * FROM categoria WHERE estado = 'ACTIVO') c
+						ON	pxc.id_categoria = c.id_categoria
+					WHERE	pxc.id_producto = p.id_producto
+					FOR		JSON PATH
+				) AS categorias
+	FROM		producto p
+	WHERE		p.estado = 'ACTIVO'
+	ORDER BY	p.nombre
+END

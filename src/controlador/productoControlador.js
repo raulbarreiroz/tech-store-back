@@ -20,8 +20,8 @@ class ProductoControlador {
   }
 
   async getProductoById(req, res, next) {
-    try {      
-      const id = parseInt(req.params.id, 10);
+    try {
+      const id = parseInt(req.params.id, 0);
       const producto = await productoServicio.getProductoById(id);
       res.json(producto);
     } catch (error) {
@@ -44,7 +44,7 @@ class ProductoControlador {
 
   async updateProducto(req, res, next) {
     try {
-      const id = parseInt(req.params.id, 10);
+      const id = parseInt(req.params.id, 0);
       const { nombre, estado, descripcion } = req.body;
       const producto = await productoServicio.updateProducto(
         id,
@@ -60,7 +60,7 @@ class ProductoControlador {
 
   async deleteProducto(req, res, next) {
     try {
-      const id = parseInt(req.params.id, 10);
+      const id = parseInt(req.params.id, 0);
       const producto = await productoServicio.deleteProducto(id);
       res.json(producto);
     } catch (error) {

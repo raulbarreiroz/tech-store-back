@@ -11,8 +11,8 @@ class CategoriaControlador {
   }
 
   async getCategoriaById(req, res, next) {
-    try {      
-      const id = parseInt(req.params.id, 10);
+    try {
+      const id = parseInt(req.params.id, 0);
       const categoria = await categoriaServicio.getCategoriaById(id);
       res.json(categoria);
     } catch (error) {
@@ -35,7 +35,7 @@ class CategoriaControlador {
 
   async updateCategoria(req, res, next) {
     try {
-      const id = parseInt(req.params.id, 10);
+      const id = parseInt(req.params.id, 0);
       const { nombre, estado, descripcion } = req.body;
       const categoria = await categoriaServicio.updateCategoria(
         id,
@@ -51,7 +51,7 @@ class CategoriaControlador {
 
   async deleteCategoria(req, res, next) {
     try {
-      const id = parseInt(req.params.id, 10);
+      const id = parseInt(req.params.id, 0);
       const categoria = await categoriaServicio.deleteCategoria(id);
       res.json(categoria);
     } catch (error) {

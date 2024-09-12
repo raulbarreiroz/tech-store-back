@@ -26,7 +26,6 @@ class CategoriaRepositorio {
 
   async createCategoria(nombre, descripcion) {
     try {
-      console.log("aqui");
       const pool = await poolPromise;
       const result = await pool
         .request()
