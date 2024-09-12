@@ -5,9 +5,13 @@ const categoriaRutas = require("./rutas/categoriaRutas");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.use(bodyParser.json());
+
+const cors = require("cors")
+
+app.use(cors())
 
 // Rutas de usuario
 app.use("/producto", productoRutas);

@@ -26,6 +26,7 @@ class ProductoRepositorio {
 
   async getProductosActivos() {
     try {
+      console.log("debuggin de problema de coneccion de base");
       const pool = await poolPromise;
       const result = await pool.request().execute("sp_leer_productos_activos");
       return result.recordset;
