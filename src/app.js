@@ -22,6 +22,9 @@ app.use("/relacion", relacionRutas);
 // Middleware de manejo de errores
 app.use(errorHandler);
 
+app.use(bodyParser.json({ limit: "100mb" }));
+app.use(bodyParser.urlencoded({ limit: "100mb" }));
+
 // Iniciar el servidor
 app.listen(port, () => {
   console.log(`Servidor ejecutándose en http://localhost:${port}`);
