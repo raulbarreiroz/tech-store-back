@@ -65,17 +65,7 @@ class CategoriaServicio {
   }
 
   async deleteCategoria(id) {
-    const categoria = await categoriaRepositorio.deleteCategoria(id);
-    if (!categoria) {
-      throw new Error("Error al eliminar la categoria");
-    }
-    return new Categoria(
-      categoria.id_categoria,
-      categoria.nombre,
-      categoria.descripcion,
-      categoria.fecha_creacion,
-      categoria.estado
-    );
+    await categoriaRepositorio.deleteCategoria(id);    
   }
 }
 

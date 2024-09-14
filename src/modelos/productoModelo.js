@@ -5,6 +5,8 @@ class Producto {
     descripcion,
     fechaCreacion,
     estado,
+    imagen,
+    precio,
     categorias
   ) {
     this.idProducto = idProducto;
@@ -13,6 +15,8 @@ class Producto {
     this.fechaCreacion = fechaCreacion;
     this.estado = estado;
     this.categorias = categorias;
+    this.imagen = imagen;
+    this.precio = precio;
   }
 }
 

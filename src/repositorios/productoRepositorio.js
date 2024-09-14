@@ -26,7 +26,6 @@ class ProductoRepositorio {
 
   async getProductosActivos() {
     try {
-      console.log("debuggin de problema de coneccion de base");
       const pool = await poolPromise;
       const result = await pool.request().execute("sp_leer_productos_activos");
       return result.recordset;
@@ -35,13 +34,15 @@ class ProductoRepositorio {
     }
   }
 
-  async createProducto(nombre, descripcion) {
+  async createProducto(nombre, descripcion, imagen, precio) {
     try {
       const pool = await poolPromise;
       const result = await pool
         .request()
         .input("nombre", sql.VarChar(50), nombre)
         .input("descripcion", sql.VarChar(100), descripcion || null)
+        .input("imagen", sql.NVarChar(sql.MAX), imagen || null)
+        .input("precio", sql.Float, precio || null)
         .execute("sp_inserta_producto");
       return result.recordset[0];
     } catch (error) {
@@ -49,7 +50,7 @@ class ProductoRepositorio {
     }
   }
 
-  async updateProducto(id, nombre, estado, descripcion) {
+  async updateProducto(id, nombre, estado, descripcion, imagen, precio) {
     try {
       const pool = await poolPromise;
       const result = await pool
@@ -58,6 +59,8 @@ class ProductoRepositorio {
         .input("nombre", sql.VarChar(50), nombre || null)
         .input("estado", sql.VarChar(20), estado || null)
         .input("descripcion", sql.VarChar(100), descripcion || null)
+        .input("precio", sql.Float, precio || null)
+        .input("imagen", sql.NVarChar(sql.MAX), imagen || null)
         .execute("sp_modifica_producto");
       return result.recordset[0];
     } catch (err) {

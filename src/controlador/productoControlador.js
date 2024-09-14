@@ -31,10 +31,12 @@ class ProductoControlador {
 
   async createProducto(req, res, next) {
     try {
-      const { nombre, descripcion } = req.body;
+      const { nombre, descripcion, imagen, precio } = req.body;
       const producto = await productoServicio.createProducto(
         nombre,
-        descripcion
+        descripcion,
+        imagen,
+        precio
       );
       res.status(201).json(producto);
     } catch (error) {
@@ -45,12 +47,14 @@ class ProductoControlador {
   async updateProducto(req, res, next) {
     try {
       const id = parseInt(req.params.id, 0);
-      const { nombre, estado, descripcion } = req.body;
+      const { nombre, estado, descripcion, imagen, precio } = req.body;
       const producto = await productoServicio.updateProducto(
         id,
         nombre,
         estado,
-        descripcion
+        descripcion,
+        imagen,
+        precio
       );
       res.json(producto);
     } catch (error) {

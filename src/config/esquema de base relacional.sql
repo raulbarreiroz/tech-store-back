@@ -6,8 +6,8 @@
 -- Requerimientos
 
 /*
-productos		: almacenar informaci√≥n inherente a los productos del inventario
-categorias		: informaci√≥n por la cual se clasifican los productos
+productos		: almacenar informaciÛn inherente a los productos del inventario
+categorias		: informaciÛn por la cual se clasifican los productos
 modificacion	: guarda un registro de las modificaciones que se hicieron a productos 
 				  con sus respectivas categorias
 */
@@ -17,10 +17,10 @@ modificacion	: guarda un registro de las modificaciones que se hicieron a produc
 Entidades claves:
 producto			:	representa el producto
 categoria			:	representa la categoria
-productoXcategoria	:	represneta la relaci√≥n entre el producto y la categor√≠a
-						(relaci√≥n muchos a muchos)
+productoXcategoria	:	represneta la relaciÛn entre el producto y la categorÌa
+						(relaciÛn muchos a muchos)
 
---  Paso 1: Diagrama Entidad-Relaci√≥n (ER)
+--  Paso 1: Diagrama Entidad-RelaciÛn (ER)
 - producto:
 id_producto			(PK, int)
 nombre				(varchar)
@@ -43,24 +43,24 @@ id_categoria			(FK, int)
 fecha_creacion		(datetime)
 estado				(datetime)
 
--- el estado podr√≠a ser otra tabla (cat√°logo)
+-- el estado podrÌa ser otra tabla (cat·logo)
 
 - modificacion:
 id_modificacion		(PK, int)
 id_producto			(FK, int)
 id_categoria		(FK, int)
 fecha_creacion		(datetime)
-accion				(varchar) -- esta accion podr√≠a ser otra catalogo, para estandarizar, pero por tiempo se lo manejar√° como un campo
+accion				(varchar) -- esta accion podrÌa ser otra catalogo, para estandarizar, pero por tiempo se lo manejar· como un campo
 imagen				(nvarchar(max))
 precio				(float)
 
 - Relaciones:
-Un producto puede tener una o varias categorias (relaci√≥n muchos a muchos)
+Un producto puede tener una o varias categorias (relaciÛn muchos a muchos)
 
 */
 
--- Paso 2: Implementaci√≥n de la Base de Datos
--- Creaci√≥n de Talas 
+-- Paso 2: ImplementaciÛn de la Base de Datos
+-- CreaciÛn de Talas 
 -- Tabla producto
 DROP TABLE IF EXISTS producto;
 CREATE TABLE producto (
@@ -94,11 +94,11 @@ CREATE TABLE productoXcategoria (
 	--FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 )
 
--- √çndices: se recomienda en columnas con una alta tasa de consulta para mejorar rendimiento
+-- Õndices: se recomienda en columnas con una alta tasa de consulta para mejorar rendimiento
 CREATE INDEX idx_producto_fecha_creacion	ON producto(fecha_creacion)
 CREATE INDEX idx_categoria_fecha_creacion	ON categoria(fecha_creacion)
 
--- Paso 3: Optimizaci√≥n 
+-- Paso 3: OptimizaciÛn 
 
 -- SPs: para evitar que las aplicaciones ejecuten consultas directa (seguridad y rendimiento)
 
@@ -138,6 +138,9 @@ BEGIN
 
 	EXEC sp_leer_producto @id_producto
 END
+
+
+EXEC sp_inserta_producto 'prueba', 'descripcion prueba'
 
 --EXEC sp_modifica_producto 1, NULL, 'ACTIVO'
 --EXEC sp_modifica_producto 3, 'Iphone 13 PRO MAX', NULL, 'celular gama alta'
@@ -447,12 +450,12 @@ select * from categoria
 select * from productoXcategoria where id_producto = 19
 -- 28, 29
 
-EXEC sp_inserta_categoria 'Celular', 'Dispositivos m√≥viles'
-EXEC sp_inserta_categoria 'Laptop', 'Dispositivos m√≥viles (computadoras)'
+EXEC sp_inserta_categoria 'Celular', 'Dispositivos mÛviles'
+EXEC sp_inserta_categoria 'Laptop', 'Dispositivos mÛviles (computadoras)'
 EXEC sp_inserta_categoria 'Samsung', 'Fabricante de celular coreano'
 EXEC sp_inserta_categoria 'Iphone', 'Fabricante de celular americano'
 EXEC sp_modifica_categoria 7, NULL, 'ACTIVO', 'Ceular fabricado por Apple'
-EXEC sp_inserta_categoria 'Apple', 'Fabricante de tecnolog√≠a americano'
+EXEC sp_inserta_categoria 'Apple', 'Fabricante de tecnologÌa americano'
 EXEC sp_inserta_categoria 'Descuento', 'Producto con descuento'
 
 EXEC sp_inserta_producto 'HUAWEI P30'
@@ -486,6 +489,8 @@ BEGIN
 				p.descripcion descripcion_producto,
 				p.fecha_creacion fecha_creacion_producto,
 				p.estado estado_producto,
+				p.precio precio_producto,
+				p.imagen imagen_producto,
 				(	
 					SELECT	pxc.id_relacion,
 							c.id_categoria,
@@ -503,3 +508,6 @@ BEGIN
 	WHERE		p.estado = 'ACTIVO'
 	ORDER BY	p.nombre
 END
+
+
+EXEC sp_leer_productos_activos

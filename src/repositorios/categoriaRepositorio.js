@@ -56,11 +56,10 @@ class CategoriaRepositorio {
 
   async deleteCategoria(id) {
     const pool = await poolPromise;
-    const result = await pool
+    await pool
       .request()
       .input("id_categoria", sql.Int, id)
       .execute("sp_dar_baja_categoria");
-    return result.recordset[0];
   }
 }
 

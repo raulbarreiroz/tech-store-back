@@ -8,11 +8,14 @@ class ProductoServicio {
     return productos?.map(
       (producto) =>
         new Producto(
-          producto.id_producto,
-          producto.nombre,
-          producto.descripcion,
-          producto.fecha_creacion,
-          producto.estado
+          producto?.id_producto,
+          producto?.nombre,
+          producto?.descripcion,
+          producto?.fecha_creacion,
+          producto?.estado,
+          producto?.imagen,
+          producto?.precio,
+          producto?.categorias
         )
     );
   }
@@ -23,11 +26,14 @@ class ProductoServicio {
       throw new Error("Producto no encontrado");
     }
     return new Producto(
-      producto.id_producto,
-      producto.nombre,
-      producto.descripcion,
-      producto.fecha_creacion,
-      producto.estado
+      producto?.id_producto,
+      producto?.nombre,
+      producto?.descripcion,
+      producto?.fecha_creacion,
+      producto?.estado,
+      producto?.imagen,
+      producto?.precio,
+      producto?.categorias
     );
   }
 
@@ -53,47 +59,58 @@ class ProductoServicio {
         }
       }
       return new Producto(
-        producto.id_producto,
-        producto.nombre_producto,
-        producto.descripcion_producto,
-        producto.fecha_creacion_producto,
-        producto.estado_producto,
+        producto?.id_producto,
+        producto?.nombre_producto,
+        producto?.descripcion_producto,
+        producto?.fecha_creacion_producto,
+        producto?.estado_producto,
+        producto?.imagen_producto,
+        producto?.precio_producto,
         categorias
       );
     });
   }
 
-  async createProducto(nombre, descripcion) {
+  async createProducto(nombre, descripcion, imagen, precio) {
     const producto = await productoRepositorio.createProducto(
       nombre,
-      descripcion
+      descripcion,
+      imagen,
+      precio
     );
     return new Producto(
-      producto.id_producto,
-      producto.nombre,
-      producto.descripcion,
-      producto.fecha_creacion,
-      producto.estado
+      producto?.id_producto,
+      producto?.nombre,
+      producto?.descripcion,
+      producto?.fecha_creacion,
+      producto?.estado,
+      producto?.imagen,
+      producto?.precio,
+      producto?.categorias
     );
   }
 
-  async updateProducto(id, nombre, descripcion, fecha_creacion, estado) {
+  async updateProducto(id, nombre, estado, descripcion, imagen, precio) {
     const producto = await productoRepositorio.updateProducto(
       id,
       nombre,
+      estado,
       descripcion,
-      fecha_creacion,
-      estado
+      imagen,
+      precio
     );
     if (!producto) {
       throw new Error("Error al actualizar el producto");
     }
     return new Producto(
-      producto.id_producto,
-      producto.nombre,
-      producto.descripcion,
-      producto.fecha_creacion,
-      producto.estado
+      producto?.id_producto,
+      producto?.nombre,
+      producto?.descripcion,
+      producto?.fecha_creacion,
+      producto?.estado,
+      producto?.imagen,
+      producto?.precio,
+      producto?.categorias
     );
   }
 
@@ -103,11 +120,14 @@ class ProductoServicio {
       throw new Error("Error al eliminar el producto");
     }
     return new Producto(
-      producto.id_producto,
-      producto.nombre,
-      producto.descripcion,
-      producto.fecha_creacion,
-      producto.estado
+      producto?.id_producto,
+      producto?.nombre,
+      producto?.descripcion,
+      producto?.fecha_creacion,
+      producto?.estado,
+      producto?.imagen,
+      producto?.precio,
+      producto?.categorias
     );
   }
 }
