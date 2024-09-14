@@ -4,6 +4,7 @@ const productoRutas = require("./rutas/productoRutas");
 const categoriaRutas = require("./rutas/categoriaRutas");
 const relacionRutas = require("./rutas/relacionRutas");
 const errorHandler = require("./middleware/errorHandler");
+const compresion = require("compression");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -22,8 +23,8 @@ app.use("/relacion", relacionRutas);
 // Middleware de manejo de errores
 app.use(errorHandler);
 
-app.use(bodyParser.json({ limit: "100mb" }));
-app.use(bodyParser.urlencoded({ limit: "100mb" }));
+// Middleware de compresion de petición
+app.use(compresion({ level: 6, threshold: 1000 }));
 
 // Iniciar el servidor
 app.listen(port, () => {
