@@ -1,6 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const productoControlador = require("../controlador/productoControlador");
+const multer = require("multer");
+
+// multer almacenará archivos temporales
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // directorio temporal
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const post = multer({ storage: storage });
+const put = multer({ storage: storage });
 
 // GET /producto
 router.get("/", productoControlador.getProductos.bind(productoControlador));
@@ -18,13 +32,10 @@ router.get(
 );
 
 // POST /producto
-router.post("/", productoControlador.createProducto.bind(productoControlador));
+router.post("/", post.single("imagen"), productoControlador.createProducto);
 
 // PUT /producto/:id
-router.put(
-  "/:id",
-  productoControlador.updateProducto.bind(productoControlador)
-);
+router.put("/:id", post.single("imagen"), productoControlador?.updateProducto);
 
 // DELETE /producto/:id
 router.delete(

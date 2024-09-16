@@ -13,7 +13,7 @@ class ProductoServicio {
           producto?.descripcion,
           producto?.fecha_creacion,
           producto?.estado,
-          producto?.imagen,
+          producto?.imagen_url,
           producto?.precio,
           producto?.categorias
         )
@@ -31,7 +31,7 @@ class ProductoServicio {
       producto?.descripcion,
       producto?.fecha_creacion,
       producto?.estado,
-      producto?.imagen,
+      producto?.imagen_url,
       producto?.precio,
       producto?.categorias
     );
@@ -64,7 +64,7 @@ class ProductoServicio {
         producto?.descripcion_producto,
         producto?.fecha_creacion_producto,
         producto?.estado_producto,
-        producto?.imagen_producto,
+        producto?.imagen_url_producto,
         producto?.precio_producto,
         categorias
       );
@@ -78,26 +78,36 @@ class ProductoServicio {
       imagen,
       precio
     );
+
     return new Producto(
       producto?.id_producto,
       producto?.nombre,
       producto?.descripcion,
       producto?.fecha_creacion,
       producto?.estado,
-      producto?.imagen,
+      producto?.imagen_url,
       producto?.precio,
       producto?.categorias
     );
   }
 
-  async updateProducto(id, nombre, estado, descripcion, imagen, precio) {
+  async updateProducto(
+    id,
+    nombre,
+    estado,
+    descripcion,
+    imagenUrl,
+    precio,
+    imagen
+  ) {
     const producto = await productoRepositorio.updateProducto(
       id,
       nombre,
       estado,
       descripcion,
-      imagen,
-      precio
+      imagenUrl,
+      precio,
+      imagen
     );
     if (!producto) {
       throw new Error("Error al actualizar el producto");
@@ -108,7 +118,7 @@ class ProductoServicio {
       producto?.descripcion,
       producto?.fecha_creacion,
       producto?.estado,
-      producto?.imagen,
+      producto?.imagen_url,
       producto?.precio,
       producto?.categorias
     );
@@ -125,7 +135,7 @@ class ProductoServicio {
       producto?.descripcion,
       producto?.fecha_creacion,
       producto?.estado,
-      producto?.imagen,
+      producto?.imagen_url,
       producto?.precio,
       producto?.categorias
     );
