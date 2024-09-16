@@ -7,7 +7,8 @@ class Producto {
     estado,
     imagenUrl,
     precio,
-    categorias
+    categorias,
+    cantidad
   ) {
     this.idProducto = idProducto;
     this.nombre = nombre;
@@ -17,6 +18,7 @@ class Producto {
     this.imagenUrl = imagenUrl;
     this.precio = precio;
     this.categorias = categorias;
+    this.cantidad = cantidad;
   }
 }
 

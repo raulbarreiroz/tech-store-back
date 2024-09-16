@@ -35,7 +35,7 @@ class ProductoRepositorio {
     }
   }
 
-  async createProducto(nombre, descripcion, imagen, precio) {
+  async createProducto(nombre, descripcion, imagen, precio, cantidad) {
     try {
       let blobUrl = undefined;
       if (imagen) {
@@ -49,6 +49,7 @@ class ProductoRepositorio {
         .input("descripcion", sql.VarChar(100), descripcion || null)
         .input("imagen_url", sql.VarChar(sql.MAX), blobUrl || null)
         .input("precio", sql.Float, precio || null)
+        .input("cantidad", sql.Int, cantidad || 0)
         .execute("sp_inserta_producto");
       return result.recordset[0];
     } catch (error) {
@@ -63,7 +64,8 @@ class ProductoRepositorio {
     descripcion,
     imagenUrl,
     precio,
-    imagen
+    imagen,
+    cantidad
   ) {
     let blobUrl;
     try {
@@ -100,6 +102,7 @@ class ProductoRepositorio {
         .input("descripcion", sql.VarChar(100), descripcion || null)
         .input("precio", sql.Float, precio || null)
         .input("imagen_url", sql.NVarChar(sql.MAX), blobUrl)
+        .input("cantidad", sql.Int, cantidad || null)
         .execute("sp_modifica_producto");            
       return result.recordset[0];
     } catch (err) {

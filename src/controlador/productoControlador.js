@@ -32,13 +32,14 @@ class ProductoControlador {
 
   async createProducto(req, res, next) {
     try {
-      const { nombre, descripcion, precio, categorias } = req.body;
+      const { nombre, descripcion, precio, categorias, cantidad } = req.body;
       const imagen = req.file;
       const producto = await productoServicio.createProducto(
         nombre,
         descripcion,
         imagen,
-        precio
+        precio,
+        cantidad
       );
 
       if (producto && categorias?.length) {
@@ -66,7 +67,7 @@ class ProductoControlador {
     try {
       const id = parseInt(req.params.id, 0);
       let imagen = req.file;
-      const { nombre, estado, descripcion, imagenUrl, precio, categorias } =
+      const { nombre, estado, descripcion, imagenUrl, precio, categorias, cantidad } =
         req.body;
 
       const producto = await productoServicio.updateProducto(
@@ -76,7 +77,8 @@ class ProductoControlador {
         descripcion,
         imagenUrl,
         precio,
-        imagen
+        imagen,
+        cantidad
       );
 
       try {

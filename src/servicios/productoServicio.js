@@ -15,7 +15,8 @@ class ProductoServicio {
           producto?.estado,
           producto?.imagen_url,
           producto?.precio,
-          producto?.categorias
+          producto?.categorias,
+          producto?.cantidad
         )
     );
   }
@@ -33,11 +34,12 @@ class ProductoServicio {
       producto?.estado,
       producto?.imagen_url,
       producto?.precio,
-      producto?.categorias
+      producto?.categorias,
+      producto?.cantidad
     );
   }
 
-  async getProductosActivos(id) {
+  async getProductosActivos() {
     const productos = await productoRepositorio.getProductosActivos();
     return productos?.map((producto) => {
       const categorias = [];
@@ -66,17 +68,19 @@ class ProductoServicio {
         producto?.estado_producto,
         producto?.imagen_url_producto,
         producto?.precio_producto,
-        categorias
+        categorias,
+        producto?.cantidad_producto
       );
     });
   }
 
-  async createProducto(nombre, descripcion, imagen, precio) {
+  async createProducto(nombre, descripcion, imagen, precio, cantidad) {
     const producto = await productoRepositorio.createProducto(
       nombre,
       descripcion,
       imagen,
-      precio
+      precio,
+      cantidad
     );
 
     return new Producto(
@@ -87,7 +91,8 @@ class ProductoServicio {
       producto?.estado,
       producto?.imagen_url,
       producto?.precio,
-      producto?.categorias
+      producto?.categorias,
+      producto?.cantidad
     );
   }
 
@@ -98,7 +103,8 @@ class ProductoServicio {
     descripcion,
     imagenUrl,
     precio,
-    imagen
+    imagen,
+    cantidad
   ) {
     const producto = await productoRepositorio.updateProducto(
       id,
@@ -107,7 +113,8 @@ class ProductoServicio {
       descripcion,
       imagenUrl,
       precio,
-      imagen
+      imagen,
+      cantidad
     );
     if (!producto) {
       throw new Error("Error al actualizar el producto");
@@ -120,7 +127,8 @@ class ProductoServicio {
       producto?.estado,
       producto?.imagen_url,
       producto?.precio,
-      producto?.categorias
+      producto?.categorias,
+      producto?.cantidad
     );
   }
 
@@ -137,7 +145,8 @@ class ProductoServicio {
       producto?.estado,
       producto?.imagen_url,
       producto?.precio,
-      producto?.categorias
+      producto?.categorias,
+      producto?.cantidad
     );
   }
 }
